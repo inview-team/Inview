@@ -1,11 +1,13 @@
 <template>
-    $END$
+    <div>
+      <b-alert variant="success" show>{{message}}</b-alert>
+    </div>
 </template>
 
 <script>
-  export default {
-    name: 'Alert'
-  };
+export default {
+  props: ['message'],
+};
 </script>
 
 <style scoped>
