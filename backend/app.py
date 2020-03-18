@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from backend.model import db,init_db, ProjectsInfo
+from backend.model import db,init_db, ProjectsInfo, User
 
 
 DEBUG = True
@@ -68,6 +68,18 @@ def single_project(project_id):
         db.session.commit()
         responce_object['message'] = 'Project removed'
     return jsonify(responce_object)
+
+@app.route('/check/<login>', methods=['GET'])
+def check(login):
+    user = User.query.get(login)
+    if user != None:
+        if user.isAdmin == 1:
+            return jsonify({'isAdmin': True})
+        else:
+            return jsonify({'isAdmin': False})
+    else:
+        return jsonify({'isAdmin': False})
+
 
 if __name__ == "__main__":
     app.run()

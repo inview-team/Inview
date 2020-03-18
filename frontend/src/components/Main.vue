@@ -4,10 +4,12 @@
       <!-- Projects -->
       <div class="row">
       <div class="col-sm-12">
-        <h1>Projects</h1>
+
         <h1 v-if="showUser">{{ user }}</h1>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.project-modal>Add Project</button>
+        <h1>{{isAdmin}}</h1>
         <button type="buttom" class="btn btn-dark btn-sm" @click="loginGithub">Login</button>
+        <h1>Projects</h1>
+        <button type="button" class="btn btn-success btn-sm" v-if="isAdmin" v-b-modal.project-modal>Add Project</button>
         <hr><br>
         <alert :message="message" v-if="showMessage"></alert>
         <div class= "row d-inline-flex">
@@ -16,17 +18,19 @@
             <div class="card-body">
               <h5 class="card-title">{{project.title}}</h5>
               <p class="card-text">{{project.info}}</p>
-              <button type="button"
+
+              <button type="button" v-if="isAdmin"
                         class="btn btn-warning btn-sm"
                         v-b-modal.project-update-modal
                         @click="editProject(project)">
                   Update
-                </button>
-                <button type="button"
+              </button>
+
+              <button type="button" v-if="isAdmin"
                         class="btn btn-danger btn-sm"
                         @click="onDeleteProject(project)">
                   Delete
-                </button>
+              </button>
             </div>
         </div>
         </div>
@@ -138,26 +142,40 @@ export default {
         url: '',
       },
       showUser: false,
-      user: null
+      user: null,
+      usertoken: null,
+      isAdmin: false
     };
   },
   methods: {
     getProjects() {
       const token = this.$route.query.code
-      const clientID = ''
-      const clientSecret = ''
       if(token != null) {
-        const path= `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${token}`
-        axios.post(path)
+        const path= `http://localhost:9999/authenticate/${token}`
+        const test=null
+        axios.get(path)
           .then((res) => {
-            console.log(res);
-            this.user=res;
+            this.usertoken = res.data.token
+            localStorage.setItem('user-token')
+            fetch('https://api.github.com/user', {
+              headers: {
+                // Include the token in the Authorization header
+                Authorization: 'token ' + res.data.token
+              }
+            })
+              .then(res => res.json())
+              .then(res => {
+
+                const path_check = `http://localhost:5000/check/${res.login}`
+                axios.get(path_check)
+                  .then((result) => {
+                    this.isAdmin = result.data.isAdmin
+                  })
+                this.user = res.login
+                this.showUser = true
+              })
+
           })
-          .catch((error) => {
-            console.error(error);
-          })
-        this.showUser=true
-        this.user=token
       }
       const path = 'http://localhost:5000/projects';
       axios.get(path)

@@ -25,6 +25,25 @@ class ProjectsInfo(db.Model):
             'url': self.image_url
         }
 
+class User(db.Model):
+    __tablename__ = "users"
+    id=db.Column('id', db.Integer, primary_key=True)
+    login=db.Column('login', db.String)
+    isAdmin=db.Column('isAdmin', db.Boolean)
+
+
+    def __init__(self, id, login, isAdmin):
+        self.id=id
+        self.login=login
+        self.isAdmin=isAdmin
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'login': self.login,
+            'isAdmin': self.isAdmin
+        }
+
 def init_db():
     db.create_all()
 
