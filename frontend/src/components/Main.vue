@@ -1,10 +1,13 @@
 <template>
-    <div class="container" >
+      <div class="container" >
+
       <!-- Projects -->
       <div class="row">
       <div class="col-sm-12">
         <h1>Projects</h1>
-<button type="button" class="btn btn-success btn-sm" v-b-modal.project-modal>Add Project</button>
+        <h1 v-if="showUser">{{ user }}</h1>
+        <button type="button" class="btn btn-success btn-sm" v-b-modal.project-modal>Add Project</button>
+        <button type="buttom" class="btn btn-dark btn-sm" @click="loginGithub">Login</button>
         <hr><br>
         <alert :message="message" v-if="showMessage"></alert>
         <div class= "row d-inline-flex">
@@ -134,10 +137,28 @@ export default {
         info: '',
         url: '',
       },
+      showUser: false,
+      user: null
     };
   },
   methods: {
     getProjects() {
+      const token = this.$route.query.code
+      const clientID = ''
+      const clientSecret = ''
+      if(token != null) {
+        const path= `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${token}`
+        axios.post(path)
+          .then((res) => {
+            console.log(res);
+            this.user=res;
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+        this.showUser=true
+        this.user=token
+      }
       const path = 'http://localhost:5000/projects';
       axios.get(path)
         .then((res) => {
@@ -147,6 +168,7 @@ export default {
           // eslint-отключение следующей строки
           console.error(error);
         });
+
     },
     addProject(payload) {
       const path = 'http://localhost:5000/projects';
@@ -236,6 +258,10 @@ export default {
     onDeleteProject(project) {
       this.removeProject(project.id);
     },
+    loginGithub(){
+      const clientID = '56839c6fc326cac8b67c'
+      window.location.href=`https://github.com/login/oauth/authorize?client_id=${clientID}`
+    }
   },
   components: {
     alert: Alert,

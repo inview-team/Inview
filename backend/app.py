@@ -7,16 +7,14 @@ from backend.model import db,init_db, ProjectsInfo
 
 DEBUG = True
 
-#'id': uuid.uuid4().hex,
-#'title': 'Chameleon',
-#'info': 'CryptoConsole',
-# 'url': 'https://sun9-49.userapi.com/c847216/v847216719/195540/eIkZwdRGdRY.jpg'
-
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+
 CORS(app, resources={r'/*': {'origins': '*'}})
+
+
 
 database_uri = 'mysql+pymysql://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
     dbuser=os.environ['DBUSER'],
