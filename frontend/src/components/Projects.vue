@@ -4,29 +4,28 @@
       <!-- Projects -->
       <div class="row">
       <div class="col-sm-12">
-
-        <h1 v-if="showUser">{{ user }}</h1>
-        <h1>{{isAdmin}}</h1>
-        <button type="buttom" class="btn btn-dark btn-sm" @click="loginGithub">Login</button>
         <h1>Projects</h1>
-        <button type="button" class="btn btn-success btn-sm" v-if="isAdmin" v-b-modal.project-modal>Add Project</button>
+        <button type="button"
+                class="btn btn-success btn-sm"
+                v-b-modal.project-modal
+        >Add Project</button>
         <hr><br>
         <alert :message="message" v-if="showMessage"></alert>
-        <div class= "row d-inline-flex">
-          <div class="card" style="width:18rem; margin:10px auto " v-for="(project, index) in projects" :key="index">
-            <img v-bind:src="project.url" class="card-img-top" style="" alt="...">
-            <div class="card-body">
+        <div class= "projects">
+          <div class="card" v-for="(project, index) in projects" :key="index">
+            <img v-bind:src="project.url" class="card-img-top">
+            <div class="card-body" >
               <h5 class="card-title">{{project.title}}</h5>
               <p class="card-text">{{project.info}}</p>
 
-              <button type="button" v-if="isAdmin"
+              <button type="button"
                         class="btn btn-warning btn-sm"
                         v-b-modal.project-update-modal
                         @click="editProject(project)">
                   Update
               </button>
 
-              <button type="button" v-if="isAdmin"
+              <button type="button"
                         class="btn btn-danger btn-sm"
                         @click="onDeleteProject(project)">
                   Delete
@@ -141,42 +140,10 @@ export default {
         info: '',
         url: '',
       },
-      showUser: false,
-      user: null,
-      usertoken: null,
-      isAdmin: false
     };
   },
   methods: {
     getProjects() {
-      const token = this.$route.query.code
-      if(token != null) {
-        const path= `http://localhost:9999/authenticate/${token}`
-        const test=null
-        axios.get(path)
-          .then((res) => {
-            this.usertoken = res.data.token
-            localStorage.setItem('user-token')
-            fetch('https://api.github.com/user', {
-              headers: {
-                // Include the token in the Authorization header
-                Authorization: 'token ' + res.data.token
-              }
-            })
-              .then(res => res.json())
-              .then(res => {
-
-                const path_check = `http://localhost:5000/check/${res.login}`
-                axios.get(path_check)
-                  .then((result) => {
-                    this.isAdmin = result.data.isAdmin
-                  })
-                this.user = res.login
-                this.showUser = true
-              })
-
-          })
-      }
       const path = 'http://localhost:5000/projects';
       axios.get(path)
         .then((res) => {
@@ -186,7 +153,6 @@ export default {
           // eslint-отключение следующей строки
           console.error(error);
         });
-
     },
     addProject(payload) {
       const path = 'http://localhost:5000/projects';
@@ -276,10 +242,6 @@ export default {
     onDeleteProject(project) {
       this.removeProject(project.id);
     },
-    loginGithub(){
-      const clientID = '56839c6fc326cac8b67c'
-      window.location.href=`https://github.com/login/oauth/authorize?client_id=${clientID}`
-    }
   },
   components: {
     alert: Alert,
@@ -291,5 +253,11 @@ export default {
 </script>
 
 <style scoped>
-
+.projects {
+  border-top: 2px solid #ccc;
+  padding-top:20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
 </style>
