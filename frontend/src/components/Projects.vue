@@ -14,10 +14,9 @@
         <div class= "projects">
           <div class="card" v-for="(project, index) in projects" :key="index">
             <img v-bind:src="project.url" class="card-img-top">
-            <div class="card-body" >
+            <div class="card-body" style="height: auto">
               <h5 class="card-title">{{project.title}}</h5>
               <p class="card-text">{{project.info}}</p>
-
               <button type="button"
                         class="btn btn-warning btn-sm"
                         v-b-modal.project-update-modal
@@ -260,4 +259,5 @@ export default {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 10px;
 }
+
 </style>
