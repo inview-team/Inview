@@ -8,14 +8,17 @@
             class="btn btn-danger btn-sm"
             @click="logoutGithub"
             v-if="isLogin">Logout</button>
+    <alert :message="message" v-if="isAlert"></alert>
     <h1 v-if="isLogin">{{token}} </h1>
     <h1 v-if="isLogin">{{usertoken}}</h1>
     <h1 v-if="isLogin">{{username}}</h1>
+    <b-img :src="imagelink" v-if="isLogin" rounded="circle" sizes="sm"></b-img>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Alert from './Alert';
 
 export default {
   name: 'Auth',
@@ -25,6 +28,9 @@ export default {
       usertoken: null,
       username: null,
       isLogin: false,
+      isAlert: false,
+      message: null,
+      imagelink: null,
     };
   },
   methods: {
@@ -57,23 +63,16 @@ export default {
               },
             }).then(result => result.json())
               .then((result) => {
+                console.log(result);
                 this.username = result.login;
                 this.usertoken = localStorage.usertoken;
+                this.imagelink = result.avatar_url;
                 this.isLogin = true;
               });
           });
       } else {
-        fetch('https://api.github.com/user', {
-          headers: {
-            // Include the token in the Authorization header
-            Authorization: `token ${localStorage.usertoken}`,
-          },
-        }).then(result => result.json())
-          .then((result) => {
-            this.username = result.login;
-            this.usertoken = localStorage.usertoken;
-            this.isLogin = true;
-          });
+        this.message = 'Please login';
+        this.isAlert = true;
       }
     },
 
@@ -86,6 +85,9 @@ export default {
   },
   created() {
     this.login();
+  },
+  components: {
+    alert: Alert,
   },
 };
 </script>

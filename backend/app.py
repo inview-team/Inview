@@ -9,10 +9,10 @@ DEBUG = True
 
 load_dotenv(find_dotenv())
 
-app = Flask(__name__)
-app.config.from_object(__name__)
+application = Flask(__name__)
+application.config.from_object(__name__)
 
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(application, resources={r'/*': {'origins': '*'}})
 
 
 
@@ -23,16 +23,16 @@ database_uri = 'mysql+pymysql://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
     dbname=os.environ['DBNAME']
 )
 
-app.config.update(
+application.config.update(
     SQLALCHEMY_DATABASE_URI=database_uri,
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
 )
 
-db.init_app(app)
-with app.app_context():
+db.init_app(application)
+with application.app_context():
     init_db()
 
-@app.route('/projects', methods=['GET','POST'])
+@application.route('/projects', methods=['GET','POST'])
 def get_projects():
     if request.method == 'POST':
         title=str(request.json.get('title'))
@@ -48,7 +48,7 @@ def get_projects():
         records = ProjectsInfo.query.all()
         return jsonify({'projects':[record.serialize() for record in records]})
 
-@app.route('/projects/<project_id>', methods=['PUT', 'DELETE'])
+@application.route('/projects/<project_id>', methods=['PUT', 'DELETE'])
 def single_project(project_id):
     responce_object = {'status' : 'success'}
     if request.method == 'PUT':
@@ -69,7 +69,7 @@ def single_project(project_id):
         responce_object['message'] = 'Project removed'
     return jsonify(responce_object)
 
-@app.route('/check/<login>', methods=['GET'])
+@application.route('/check/<login>', methods=['GET'])
 def check(login):
     user = User.query.get(login)
     if user != None:
@@ -82,4 +82,4 @@ def check(login):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    application.run(host="0.0.0.0", port=5000)
