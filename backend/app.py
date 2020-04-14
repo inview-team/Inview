@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from backend.model import db,init_db, ProjectsInfo, User
+from model import db,init_db, ProjectsInfo, User
 
 
 DEBUG = True
@@ -82,4 +82,4 @@ def check(login):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
