@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     getProjects() {
-      const path = 'http://localhost:5000/projects';
+      const path = 'http://inview.team:5000/projects';
       axios.get(path)
         .then((res) => {
           this.projects = res.data.projects;
@@ -154,7 +154,7 @@ export default {
         });
     },
     addProject(payload) {
-      const path = 'http://localhost:5000/projects';
+      const path = 'http://inview.team:5000/projects';
       axios.post(path, payload)
         .then(() => {
           this.getProjects();
@@ -205,7 +205,7 @@ export default {
       this.updateProject(payload, this.editProjectForm.id);
     },
     updateProject(payload, projectID) {
-      const path = `http://localhost:5000/projects/${projectID}`;
+      const path = `http://inview.team:5000/projects/${projectID}`;
       axios.put(path, payload)
         .then(() => {
           this.getProjects();
@@ -225,7 +225,7 @@ export default {
       this.getProjects();
     },
     removeProject(projectID) {
-      const path = `http://localhost:5000/projects/${projectID}`;
+      const path = `http://inview.team:5000/projects/${projectID}`;
       axios.delete(path)
         .then(() => {
           this.getProjects();

@@ -52,7 +52,7 @@ export default {
     login() {
       this.add_token();
       if (localStorage.token && localStorage.usertoken == null) {
-        const path = `http://localhost:9999/authenticate/${localStorage.token}`;
+        const path = `http://inview.team:9999/authenticate/${localStorage.token}`;
         axios.get(path)
           .then((res) => {
             localStorage.usertoken = res.data.token;
