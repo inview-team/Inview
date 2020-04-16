@@ -16,6 +16,9 @@ build backend:
     - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
     - docker build -t ${DOCKER_TEAM}/inview-backend ./backend
     - docker push ${DOCKER_TEAM}/inview-backend
+  only:
+    changes:
+      - backend/*
 
 build frontend:
   stage: build
@@ -27,3 +30,6 @@ build frontend:
     - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
     - docker build -t ${DOCKER_TEAM}/inview-frontend ./frontend
     - docker push ${DOCKER_TEAM}/inview-frontend   
+    only:
+    changes:
+      - frontend/*
