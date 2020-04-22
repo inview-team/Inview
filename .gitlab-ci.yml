@@ -29,7 +29,7 @@ build frontend:
   script:
     - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
     - docker build -t ${DOCKER_TEAM}/inview-frontend ./frontend
-    - docker push ${DOCKER_TEAM}/inview-frontend   
+    - docker push ${DOCKER_TEAM}/inview-frontend
   only:
     changes:
       - frontend/*

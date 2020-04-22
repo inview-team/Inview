@@ -12,7 +12,7 @@
     <h1 v-if="isLogin">{{token}} </h1>
     <h1 v-if="isLogin">{{usertoken}}</h1>
     <h1 v-if="isLogin">{{username}}</h1>
-    <b-img :src="imagelink" v-if="isLogin" rounded="circle" sizes="sm"></b-img>
+    <img class="av" src="https://avatars2.githubusercontent.com/u/28315102?v=4" v-if="isLogin">
   </div>
 </template>
 
@@ -93,5 +93,10 @@ export default {
 </script>
 
 <style scoped>
-
+.av {
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+}
 </style>
